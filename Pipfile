@@ -10,7 +10,6 @@ python-social-auth = "*"
 psycopg2 = "*"
 update = "*"
 opencv-contrib-python = "*"
-geocoder = "*"
 geoip2 = "*"
 
 [dev-packages]
