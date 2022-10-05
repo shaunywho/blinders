@@ -7,12 +7,14 @@ from django.contrib import messages
 from .templates.forms import CreateUserForm, UpdateUserForm
 import os
 from django.conf import settings
+from .utils.face_blurrer import make_blurred_picture
 # Create your views here.
 # @login_required
 def edit_profile_view(request, *args, **kwargs):
   user = request.user
 
-  user.blur_picture(f"{settings.BASE_DIR}{user.profile_picture_url.url}")
+  
+  
   user_details = {
   'description': user.description,
   }
@@ -20,10 +22,10 @@ def edit_profile_view(request, *args, **kwargs):
   if request.method == 'POST':
     form = UpdateUserForm(request.POST, request.FILES, instance=user)
     if form.is_valid():
-      user = form.save(commit=False)
-      user.save()
+      user = form.save()
+      make_blurred_picture(f"{settings.BASE_DIR}{user.profile_picture_url.url}")
+      # user.save()
   context = {'form': form}
-  print(form.errors)
   return render(request, 'edit_profile_view.html',context)
 
   
@@ -43,6 +45,7 @@ def faq_view(request, *args, **kwargs):
   return render(request, "faq_view.html", {})
 
 def landing_view(request):
+  print(request.META.get('REMOTE_ADDR'))
   return render(request, "landing_view.html", {})
 
 def register_view(request, *args, **kwargs):
