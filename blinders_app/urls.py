@@ -16,9 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-# from django.conf import settings
-# from django.conf.urls.static import static
-# from pages.views import home_view
+from django.conf import settings
+from django.conf.urls.static import static
+
 from blinders.views import edit_profile_view, swipe_view, settings_view, faq_view, landing_view, register_view, login_view, logout_user
 
 urlpatterns = [
@@ -31,4 +31,4 @@ urlpatterns = [
     path('logout/', logout_user),
     path("register/", register_view),
     path("login/", login_view),
-] #+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

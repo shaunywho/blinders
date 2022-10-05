@@ -5,23 +5,22 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from .templates.forms import CreateUserForm, UpdateUserForm
+import os
+from django.conf import settings
 # Create your views here.
 # @login_required
 def edit_profile_view(request, *args, **kwargs):
   user = request.user
+
+  user.blur_picture(f"{settings.BASE_DIR}{user.profile_picture_url.url}")
   user_details = {
   'description': user.description,
-  'profile_pic': user.profile_pic,
   }
   form = UpdateUserForm(initial=user_details)
   if request.method == 'POST':
     form = UpdateUserForm(request.POST, request.FILES, instance=user)
     if form.is_valid():
-
-      description = form.cleaned_data.get('description')
-      profile_pic = form.cleaned_data.get('profile_pic')
-      print(profile_pic)
-      user = form.save()
+      user = form.save(commit=False)
       user.save()
   context = {'form': form}
   print(form.errors)
@@ -51,7 +50,11 @@ def register_view(request, *args, **kwargs):
   if request.method == "POST":
     form = CreateUserForm(request.POST)
     if form.is_valid():
-      user = form.save()
+      user = form.save(commit=False)
+      user.profile_picture_url = os.path.join(settings.MEDIA_ROOT, "default_profile_picture.jpeg")
+      user.blurred_profile_picture_url= os.path.join(settings.MEDIA_ROOT, "default_profile_picture.jpeg")
+
+      user.save()
       messages.success(request, f"User has been created for {user.username}")
       return redirect('/login/')
   else:
