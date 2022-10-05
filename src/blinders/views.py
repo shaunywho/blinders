@@ -8,6 +8,7 @@ from .templates.forms import CreateUserForm, UpdateUserForm
 import os
 from django.conf import settings
 from .utils.face_blurrer import make_blurred_picture
+from .utils.geolocation import get_geolocation, get_ip
 # Create your views here.
 # @login_required
 def edit_profile_view(request, *args, **kwargs):
@@ -46,7 +47,6 @@ def faq_view(request, *args, **kwargs):
   return render(request, "faq_view.html", {})
 
 def landing_view(request):
-  print(request.META.get('REMOTE_ADDR'))
   return render(request, "landing_view.html", {})
 
 def register_view(request, *args, **kwargs):
@@ -72,6 +72,8 @@ def login_view(request, *args, **kwargs):
     form = AuthenticationForm(request, data = request.POST)
     if form.is_valid():
       user = form.get_user()
+      user.ip_address = get_ip(request)
+      user.save()
       login(request, user)
       return redirect('/app/')
   else:
@@ -82,5 +84,7 @@ def login_view(request, *args, **kwargs):
 def logout_user(request,*args, **kwargs):
   logout(request)
   return redirect('/')
+
+
 
 
