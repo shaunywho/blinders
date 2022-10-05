@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-
+# from django.conf import settings
+# from django.conf.urls.static import static
 # from pages.views import home_view
-from blinders.views import edit_profile_view, swipe_view, settings_view, faq_view, landing_view, register_view, login_view
+from blinders.views import edit_profile_view, swipe_view, settings_view, faq_view, landing_view, register_view, login_view, logout_user
 
 urlpatterns = [
     path('', landing_view, name = 'home'),
@@ -27,7 +28,7 @@ urlpatterns = [
     path('app/settings/', settings_view),
     path('app/faq', faq_view),
     path('admin/', admin.site.urls),
-    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path('logout/', logout_user),
     path("register/", register_view),
     path("login/", login_view),
-]
+] #+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
