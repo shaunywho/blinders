@@ -23,8 +23,9 @@ def edit_profile_view(request, *args, **kwargs):
     form = UpdateUserForm(request.POST, request.FILES, instance=user)
     if form.is_valid():
       user = form.save()
-      make_blurred_picture(f"{settings.BASE_DIR}{user.profile_picture_url.url}")
-      # user.save()
+      blurred_picture_url = make_blurred_picture(user.profile_picture_url.url)
+      user.blurred_profile_picture_url = blurred_picture_url
+      user.save()
   context = {'form': form}
   return render(request, 'edit_profile_view.html',context)
 
