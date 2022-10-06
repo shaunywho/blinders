@@ -4,6 +4,10 @@
     "pk": 1,
     "fields": {
       "user": 1,
+      "match_distance": 30,
+      "match_age_max": 99,
+      "match_age_min": 18,
+      "match_gender": "FEMALE",
       "city": "New Malden",
       "latitude": "51.399700",
       "longitude": "-0.251500",
@@ -18,6 +22,10 @@
     "pk": 2,
     "fields": {
       "user": 2,
+      "match_distance": 30,
+      "match_age_max": 99,
+      "match_age_min": 18,
+      "match_gender": "MALE",
       "city": "New Malden",
       "latitude": "51.399700",
       "longitude": "-0.251500",
@@ -32,6 +40,10 @@
     "pk": 3,
     "fields": {
       "user": 3,
+      "match_distance": 30,
+      "match_age_max": 99,
+      "match_age_min": 18,
+      "match_gender": "FEMALE",
       "city": "New Malden",
       "latitude": "51.399700",
       "longitude": "-0.251500",
@@ -46,6 +58,10 @@
     "pk": 4,
     "fields": {
       "user": 4,
+      "match_distance": 30,
+      "match_age_max": 99,
+      "match_age_min": 18,
+      "match_gender": "ALL",
       "city": "New Malden",
       "latitude": "51.399700",
       "longitude": "-0.251500",
@@ -53,6 +69,24 @@
       "bio": "test 4",
       "profile_picture_url": "images/test_image_4_FyIXIrZ.jpg",
       "blurred_profile_picture_url": "/media/images/test_image_4_FyIXIrZ_blurred.jpg"
+    }
+  },
+  {
+    "model": "blinders.profile",
+    "pk": 5,
+    "fields": {
+      "user": 5,
+      "match_distance": 30,
+      "match_age_max": 99,
+      "match_age_min": 18,
+      "match_gender": "MALE",
+      "city": "New Malden",
+      "latitude": "51.399700",
+      "longitude": "-0.251500",
+      "age": null,
+      "bio": "Add a bio",
+      "profile_picture_url": "images/test_image_5_avkZCoM.jpg",
+      "blurred_profile_picture_url": "/media/images/test_image_5_avkZCoM_blurred.jpg"
     }
   }
 ]

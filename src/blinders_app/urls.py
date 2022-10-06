@@ -19,12 +19,12 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
-from blinders.views import edit_profile_view, swipe_view, settings_view, faq_view, landing_view, register_view, login_view, logout_user
+from blinders.views import edit_profile_view, match_view, settings_view, faq_view, landing_view, register_view, login_view, logout_user
 
 urlpatterns = [
     path('', landing_view, name = 'home'),
     path('app/edit-profile/', edit_profile_view),
-    path('app/', swipe_view),
+    path('app/', match_view),
     path('app/settings/', settings_view),
     path('app/faq', faq_view),
     path('admin/', admin.site.urls),

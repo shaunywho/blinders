@@ -13,7 +13,8 @@
       "is_staff": false,
       "is_active": true,
       "date_joined": "2022-10-06T14:49:55.490",
-      "age": null,
+      "age": 40,
+      "gender": "MALE",
       "groups": [],
       "user_permissions": []
     }
@@ -32,7 +33,8 @@
       "is_staff": false,
       "is_active": true,
       "date_joined": "2022-10-06T14:53:27.390",
-      "age": null,
+      "age": 25,
+      "gender": "FEMALE",
       "groups": [],
       "user_permissions": []
     }
@@ -51,7 +53,8 @@
       "is_staff": false,
       "is_active": true,
       "date_joined": "2022-10-06T14:54:12.285",
-      "age": null,
+      "age": 30,
+      "gender": "MALE",
       "groups": [],
       "user_permissions": []
     }
@@ -70,7 +73,28 @@
       "is_staff": false,
       "is_active": true,
       "date_joined": "2022-10-06T14:55:03.949",
-      "age": null,
+      "age": 28,
+      "gender": "FEMALE",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "blinders.user",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$390000$VeAtx7cnYiXjXC0yW0FD60$ls8tudOS/MBL+E+u0suF9HCYNZ1o3IYRa3RphowD11A=",
+      "last_login": "2022-10-06T15:34:34.381",
+      "is_superuser": false,
+      "username": "test5",
+      "first_name": "test5",
+      "last_name": "test5",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2022-10-06T15:34:28.359",
+      "age": 30,
+      "gender": "MALE",
       "groups": [],
       "user_permissions": []
     }

@@ -36,16 +36,12 @@ def edit_profile_view(request, *args, **kwargs):
     update_profile_form = UpdateProfileForm()
   context = {'update_user_form': update_user_form, 'update_profile_form': update_profile_form}
   return render(request, 'edit_profile_view.html',context)
-
   
-
-  context = {'form' : form}
-  return render(request, "edit_profile_view.html", context)
 # @login_required
-def swipe_view(request, *args, **kwargs):
-  return render(request, "swipe_view.html", {})
+def match_view(request, *args, **kwargs):
 
-  return render(request, "swipe_view.html", {})
+  return render(request, "match_view.html", {})
+
 # @login_required
 def settings_view(request, *args, **kwargs):
   return render(request, "settings_view.html", {})
