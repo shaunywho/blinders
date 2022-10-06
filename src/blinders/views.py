@@ -4,30 +4,37 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
-from .templates.forms import CreateUserForm, UpdateUserForm
+from .templates.forms import CreateUserForm, UpdateUserForm, UpdateProfileForm
 import os
 from django.conf import settings
 from .utils.face_blurrer import make_blurred_picture
 from .utils.geolocation import get_geolocation, get_ip
+from .models import Profile
 # Create your views here.
 # @login_required
 def edit_profile_view(request, *args, **kwargs):
   user = request.user
-
-  
-  
-  user_details = {
-  'description': user.description,
+  profile = user.profile
+  profile_details = {
+  'bio': profile.bio,
   }
-  form = UpdateUserForm(initial=user_details)
+  user_details = {
+    'email': user.email
+  }
+  update_user_form = UpdateUserForm()
   if request.method == 'POST':
-    form = UpdateUserForm(request.POST, request.FILES, instance=user)
-    if form.is_valid():
-      user = form.save()
-      blurred_picture_url = make_blurred_picture(user.profile_picture_url.url)
-      user.blurred_profile_picture_url = blurred_picture_url
-      user.save()
-  context = {'form': form}
+    update_user_form = UpdateUserForm(request.POST,  instance=user)
+    update_profile_form = UpdateProfileForm(request.POST, request.FILES, instance = profile)
+    if update_user_form.is_valid() and update_profile_form.is_valid():
+      user = update_user_form.save()
+      profile = update_profile_form.save(commit = False)
+      blurred_picture_url = make_blurred_picture(profile.profile_picture_url.url)
+      profile.blurred_profile_picture_url = blurred_picture_url
+      profile.save()
+  else:
+    update_user_form = UpdateUserForm()
+    update_profile_form = UpdateProfileForm()
+  context = {'update_user_form': update_user_form, 'update_profile_form': update_profile_form}
   return render(request, 'edit_profile_view.html',context)
 
   
@@ -54,11 +61,7 @@ def register_view(request, *args, **kwargs):
   if request.method == "POST":
     form = CreateUserForm(request.POST)
     if form.is_valid():
-      user = form.save(commit=False)
-      user.profile_picture_url = os.path.join(settings.MEDIA_ROOT, "default_profile_picture.jpeg")
-      user.blurred_profile_picture_url= os.path.join(settings.MEDIA_ROOT, "default_profile_picture.jpeg")
-
-      user.save()
+      user = form.save()
       messages.success(request, f"User has been created for {user.username}")
       return redirect('/login/')
   else:
@@ -72,8 +75,7 @@ def login_view(request, *args, **kwargs):
     form = AuthenticationForm(request, data = request.POST)
     if form.is_valid():
       user = form.get_user()
-      user.ip_address = get_ip(request)
-      user.save()
+      set_profile_location(request, user)
       login(request, user)
       return redirect('/app/')
   else:
@@ -85,6 +87,17 @@ def logout_user(request,*args, **kwargs):
   logout(request)
   return redirect('/')
 
+
+
+
+
+def set_profile_location(request, user):
+  profile = user.profile
+  location_data = get_geolocation(request)
+  profile.city = location_data['city']
+  profile.latitude = location_data['latitude']
+  profile.longitude = location_data['longitude']
+  profile.save()
 
 
 

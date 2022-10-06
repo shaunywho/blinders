@@ -8,9 +8,11 @@ def get_geolocation(request):
   ip = get_ip(request)
 
   g = GeoIP2()
-  print(g.city(ip))
 
-  return g.coords(ip)
+  return g.city(ip)
+
+
+
 
 
 def get_ip(request):
