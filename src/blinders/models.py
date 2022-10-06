@@ -22,6 +22,9 @@ class User(AbstractUser):
 
 
 
+
+
+
 class Profile(models.Model):
 
   class MatchGenderChoices(models.TextChoices):
@@ -43,6 +46,7 @@ class Profile(models.Model):
   bio = models.TextField(max_length=5000, default = "Add a bio", null = True)
   profile_picture_url = models.ImageField(default = os.path.join( "images","default_profile_picture.jpg"), blank = True, upload_to = "images/")
   blurred_profile_picture_url = models.ImageField(default = os.path.join( "images","default_profile_picture.jpg"), blank = True, upload_to = "images/")
+ 
 
 
 

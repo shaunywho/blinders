@@ -9,7 +9,7 @@ import os
 from django.conf import settings
 from .utils.face_blurrer import make_blurred_picture
 from .utils.geolocation import get_geolocation, get_ip
-from .models import Profile
+from .models import Profile, User
 # Create your views here.
 # @login_required
 def edit_profile_view(request, *args, **kwargs):
@@ -36,10 +36,12 @@ def edit_profile_view(request, *args, **kwargs):
     update_profile_form = UpdateProfileForm()
   context = {'update_user_form': update_user_form, 'update_profile_form': update_profile_form}
   return render(request, 'edit_profile_view.html',context)
-  
+
 # @login_required
 def match_view(request, *args, **kwargs):
-
+  user = request.user
+  matches = get_matches(user)
+  print(matches)
   return render(request, "match_view.html", {})
 
 # @login_required
@@ -97,3 +99,9 @@ def set_profile_location(request, user):
 
 
 
+def get_matches(user):
+  profile = user.profile
+  all_possible_matches = Profile.objects.exclude(user = user)
+  if profile.match_gender != 'All':
+    return all_possible_matches.filter(gender=profile.match_gender)
+  return all_possible_matches
