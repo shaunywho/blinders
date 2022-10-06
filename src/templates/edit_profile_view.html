@@ -4,7 +4,6 @@
 <img src={{user.profile.profile_picture_url.url}} alt="Profile Picture" width="400">
 <form method="POST" action="", enctype="multipart/form-data">
 {% csrf_token %}
-{{update_user_form.as_p}}
 {{update_profile_form.as_p}}
 <input type = "submit"> Save </form>
 </form>

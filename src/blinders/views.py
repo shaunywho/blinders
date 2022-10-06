@@ -4,43 +4,36 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
-from .templates.forms import CreateUserForm, UpdateUserForm, UpdateProfileForm
+from .templates.forms import CreateUserForm, CreateProfileForm, UpdateUserForm, UpdateProfileForm
 import os
 from django.conf import settings
 from .utils.face_blurrer import make_blurred_picture
-from .utils.geolocation import get_geolocation, get_ip
-from .models import Profile, User
+from .utils.geolocation import get_geolocation, get_ip, get_distance
+from .models import Profile
 # Create your views here.
 # @login_required
 def edit_profile_view(request, *args, **kwargs):
-  user = request.user
-  profile = user.profile
+  profile = request.user.profile
   profile_details = {
   'bio': profile.bio,
   }
-  user_details = {
-    'email': user.email
-  }
   update_user_form = UpdateUserForm()
   if request.method == 'POST':
-    update_user_form = UpdateUserForm(request.POST,  instance=user)
     update_profile_form = UpdateProfileForm(request.POST, request.FILES, instance = profile)
     if update_user_form.is_valid() and update_profile_form.is_valid():
-      user = update_user_form.save()
       profile = update_profile_form.save(commit = False)
       blurred_picture_url = make_blurred_picture(profile.profile_picture_url.url)
       profile.blurred_profile_picture_url = blurred_picture_url
       profile.save()
   else:
-    update_user_form = UpdateUserForm()
-    update_profile_form = UpdateProfileForm()
-  context = {'update_user_form': update_user_form, 'update_profile_form': update_profile_form}
+    update_profile_form = UpdateProfileForm(initial= profile_details)
+  context = {'update_profile_form': update_profile_form}
   return render(request, 'edit_profile_view.html',context)
 
 # @login_required
 def match_view(request, *args, **kwargs):
   user = request.user
-  matches = get_matches(user)
+  matches = get_matches_age_gender(user)
   print(matches)
   return render(request, "match_view.html", {})
 
@@ -57,15 +50,22 @@ def landing_view(request):
 def register_view(request, *args, **kwargs):
 
   if request.method == "POST":
-    form = CreateUserForm(request.POST)
-    if form.is_valid():
-      user = form.save()
+    create_user_form = CreateUserForm(request.POST)
+    create_profile_form = CreateProfileForm(request.POST)
+    if create_user_form.is_valid() and create_profile_form.is_valid():
+      user = create_user_form.save()
+      profile = user.profile
+      profile.age = create_profile_form.cleaned_data['age']
+      profile.gender = create_profile_form.cleaned_data['gender']
+      profile.save()
       messages.success(request, f"User has been created for {user.username}")
       return redirect('/login/')
   else:
-    form = CreateUserForm()
+    create_user_form = CreateUserForm()
+    create_profile_form = CreateProfileForm()
 
-  context = {'form': form}
+
+  context = {'create_user_form': create_user_form, 'create_profile_form': create_profile_form}
   return render(request, "register_view.html", context)
 
 def login_view(request, *args, **kwargs):
@@ -99,9 +99,19 @@ def set_profile_location(request, user):
 
 
 
-def get_matches(user):
+def get_matches_age_gender(user):
   profile = user.profile
-  all_possible_matches = Profile.objects.exclude(user = user)
-  if profile.match_gender != 'All':
-    return all_possible_matches.filter(gender=profile.match_gender)
-  return all_possible_matches
+  matches_age = Profile.objects.exclude(user = user).filter(age__lte=profile.match_age_max).filter(age__gte=profile.match_age_min)
+  if profile.match_gender != 'ALL':
+    matches_age_gender =  matches_age.filter(gender=profile.match_gender)
+  else:
+    matches_age_gender = matches_age
+  return matches_age_gender
+  
+
+def get_matches_age_gender_distance(user):
+  user_profile = user.profile
+  age_gender_matches = get_matches_age_gender(user)
+  matches_age_gender_distance = [match_profile for match_profile in age_gender_matches if get_distance(match_profile.latitude,match_profile.longitude,user_profile.latitude, user_profile.longitude)]
+  return matches_age_gender_distance
+

@@ -135,7 +135,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-AUTH_USER_MODEL = 'blinders.User' # change this (blinders) to app name
+# AUTH_USER_MODEL = 'blinders.User' # change this (blinders) to app name
 
 ASSETS_URL = os.path.join(BASE_DIR, 'assets')
 

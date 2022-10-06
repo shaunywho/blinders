@@ -1,11 +1,15 @@
 <h1>Register Page</h1>
 
 <form method="POST" action="">
-  {% csrf_token %} {% for field in form %} {{field.label}}{{field}} {% endfor %}
+  {% csrf_token %} {% for field in create_user_form %} {{field.label}}{{field}}
+  {% endfor %} {% for field in create_profile_form %} {{field.label}}{{field}}
+  {% endfor %}
 
   <input type="submit" name="Create User" />
 </form>
 
-{% if form.errors %}
-<div class="alert alert-danger">{{ form.errors }}</div>
+{% if create_user_form.errors %}
+<div class="alert alert-danger">{{ create_user_form.errors }}</div>
+{% endif %} {% if create_profile_form.errors %}
+<div class="alert alert-danger">{{ create_profile_form.errors }}</div>
 {% endif %}

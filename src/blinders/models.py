@@ -1,26 +1,13 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 import os
 from  django.conf import settings
 
 MIN_AGE = 18
 MAX_AGE =99
-
-
-
-
-class User(AbstractUser):
-  class GenderChoices(models.TextChoices):
-      FEMALE = 'FEMALE'
-      MALE = 'MALE'
-      NONBINARY = 'NONBINARY'
-  age = models.IntegerField(null=True, blank=False)
-  gender = models.CharField(max_length=10, choices = GenderChoices.choices, null = True, blank = False)
-
-
 
 
 
@@ -32,7 +19,13 @@ class Profile(models.Model):
     MALE = 'MALE'
     ALL = 'ALL'
 
+  class GenderChoices(models.TextChoices):
+      FEMALE = 'FEMALE'
+      MALE = 'MALE'
+      NONBINARY = 'NONBINARY'
 
+  age = models.IntegerField(null=True, blank=False)
+  gender = models.CharField(max_length=10, choices = GenderChoices.choices, null = True, blank = False)
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   match_distance = models.IntegerField(default = 30)
   match_age_max = models.IntegerField(default = 99)
