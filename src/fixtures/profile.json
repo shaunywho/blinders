@@ -1,0 +1,58 @@
+[
+  {
+    "model": "blinders.profile",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "city": "New Malden",
+      "latitude": "51.399700",
+      "longitude": "-0.251500",
+      "age": null,
+      "bio": "Test 1 Bio",
+      "profile_picture_url": "images/test_image_1_bKwbblX.webp",
+      "blurred_profile_picture_url": "/media/images/test_image_1_bKwbblX_blurred.webp"
+    }
+  },
+  {
+    "model": "blinders.profile",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "city": "New Malden",
+      "latitude": "51.399700",
+      "longitude": "-0.251500",
+      "age": null,
+      "bio": "Add a bio",
+      "profile_picture_url": "images/test_image_2_vQFsJcm.webp",
+      "blurred_profile_picture_url": "/media/images/test_image_2_vQFsJcm_blurred.webp"
+    }
+  },
+  {
+    "model": "blinders.profile",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "city": "New Malden",
+      "latitude": "51.399700",
+      "longitude": "-0.251500",
+      "age": null,
+      "bio": "Test 3",
+      "profile_picture_url": "images/test_image_3_i9vMiDY.jpg",
+      "blurred_profile_picture_url": "/media/images/test_image_3_i9vMiDY_blurred.jpg"
+    }
+  },
+  {
+    "model": "blinders.profile",
+    "pk": 4,
+    "fields": {
+      "user": 4,
+      "city": "New Malden",
+      "latitude": "51.399700",
+      "longitude": "-0.251500",
+      "age": null,
+      "bio": "test 4",
+      "profile_picture_url": "images/test_image_4_FyIXIrZ.jpg",
+      "blurred_profile_picture_url": "/media/images/test_image_4_FyIXIrZ_blurred.jpg"
+    }
+  }
+]
