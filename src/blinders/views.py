@@ -10,6 +10,10 @@ from django.conf import settings
 from .utils.face_blurrer import make_blurred_picture
 from .utils.geolocation import get_geolocation, get_ip, get_distance
 from .models import Profile
+from django.contrib.auth.models import User
+from django.db.models import Exists, OuterRef, Q
+
+
 # Create your views here.
 # @login_required
 def edit_profile_view(request, *args, **kwargs):
@@ -17,11 +21,13 @@ def edit_profile_view(request, *args, **kwargs):
   profile_details = {
   'bio': profile.bio,
   }
-  update_user_form = UpdateUserForm()
   if request.method == 'POST':
     update_profile_form = UpdateProfileForm(request.POST, request.FILES, instance = profile)
-    if update_user_form.is_valid() and update_profile_form.is_valid():
+    if update_profile_form.is_valid():
       profile = update_profile_form.save(commit = False)
+      print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+      print(profile.profile_picture_url.path)
+      print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
       blurred_picture_url = make_blurred_picture(profile.profile_picture_url.url)
       profile.blurred_profile_picture_url = blurred_picture_url
       profile.save()
@@ -34,8 +40,8 @@ def edit_profile_view(request, *args, **kwargs):
 def find_match_view(request, *args, **kwargs):
   user = request.user
   profiles = get_profiles_age_gender(user)
+  print(profiles)
   context = {'profiles': profiles}
-  print(profiles[0].parent)
   return render(request, "find_match_view.html", context)
 
 # @login_required
@@ -56,6 +62,7 @@ def register_view(request, *args, **kwargs):
     if create_user_form.is_valid() and create_profile_form.is_valid():
       user = create_user_form.save()
       profile = user.profile
+      profile.first_name = user.first_name
       profile.age = create_profile_form.cleaned_data['age']
       profile.gender = create_profile_form.cleaned_data['gender']
       profile.save()
@@ -113,6 +120,7 @@ def get_profiles_age_gender(user):
   else:
     matches_age_gender = matches_age
   return matches_age_gender
+
   
 
 def get_profiles_age_gender_distance(user):

@@ -23,7 +23,7 @@ class Profile(models.Model):
       FEMALE = 'FEMALE'
       MALE = 'MALE'
       NONBINARY = 'NONBINARY'
-
+  first_name = models.CharField(max_length=30, null=True)
   age = models.IntegerField(null=True, blank=False)
   gender = models.CharField(max_length=10, choices = GenderChoices.choices, null = True, blank = False)
   user = models.OneToOneField(User, on_delete=models.CASCADE)
