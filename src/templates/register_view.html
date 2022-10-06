@@ -1,3 +1,4 @@
+{% extends 'base.html' %} {%block content %}
 <h1>Register Page</h1>
 
 <form method="POST" action="">
@@ -12,4 +13,4 @@
 <div class="alert alert-danger">{{ create_user_form.errors }}</div>
 {% endif %} {% if create_profile_form.errors %}
 <div class="alert alert-danger">{{ create_profile_form.errors }}</div>
-{% endif %}
+{% endif %} {% endblock %}

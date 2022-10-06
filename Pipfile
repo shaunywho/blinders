@@ -12,6 +12,8 @@ update = "*"
 opencv-contrib-python = "*"
 geocoder = "*"
 geoip2 = "*"
+django-seed = "*"
+mpu = "*"
 
 [dev-packages]
 

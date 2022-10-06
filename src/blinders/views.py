@@ -31,11 +31,12 @@ def edit_profile_view(request, *args, **kwargs):
   return render(request, 'edit_profile_view.html',context)
 
 # @login_required
-def match_view(request, *args, **kwargs):
+def find_match_view(request, *args, **kwargs):
   user = request.user
-  matches = get_matches_age_gender(user)
-  print(matches)
-  return render(request, "match_view.html", {})
+  profiles = get_profiles_age_gender(user)
+  context = {'profiles': profiles}
+  print(profiles[0].parent)
+  return render(request, "find_match_view.html", context)
 
 # @login_required
 def settings_view(request, *args, **kwargs):
@@ -85,7 +86,12 @@ def logout_user(request,*args, **kwargs):
   logout(request)
   return redirect('/')
 
+def matches_view (request, *args, **kwargs):
+  return render(request, 'matches_view.html')
 
+
+def swipe_profile(request, *args, **kwargs):
+  return redirect('find_match_view')
 
 
 
@@ -99,7 +105,7 @@ def set_profile_location(request, user):
 
 
 
-def get_matches_age_gender(user):
+def get_profiles_age_gender(user):
   profile = user.profile
   matches_age = Profile.objects.exclude(user = user).filter(age__lte=profile.match_age_max).filter(age__gte=profile.match_age_min)
   if profile.match_gender != 'ALL':
@@ -109,9 +115,9 @@ def get_matches_age_gender(user):
   return matches_age_gender
   
 
-def get_matches_age_gender_distance(user):
+def get_profiles_age_gender_distance(user):
   user_profile = user.profile
-  age_gender_matches = get_matches_age_gender(user)
+  age_gender_matches = get_profiles_age_gender(user)
   matches_age_gender_distance = [match_profile for match_profile in age_gender_matches if get_distance(match_profile.latitude,match_profile.longitude,user_profile.latitude, user_profile.longitude)]
   return matches_age_gender_distance
 
