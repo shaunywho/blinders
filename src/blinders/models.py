@@ -23,7 +23,7 @@ class Profile(models.Model):
       FEMALE = 'FEMALE'
       MALE = 'MALE'
       NONBINARY = 'NONBINARY'
-  first_name = models.CharField(max_length=30, null=True)
+  display_name = models.CharField(max_length=30, null=True)
   age = models.IntegerField(null=True, blank=False)
   gender = models.CharField(max_length=10, choices = GenderChoices.choices, null = True, blank = False)
   user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -57,7 +57,7 @@ class Match(models.Model):
   liker_id = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name = "matcher_id")
   likee_id = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name = "matchee_id")
   match = models.BooleanField(default= False)
-  date_liked= models.DateField(auto_now_add=True)
+  date_liked= models.DateField(auto_now=True)
   date_confirmed =models.DateField(null= True)
 
 class Message(models.Model):

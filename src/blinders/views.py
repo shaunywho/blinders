@@ -9,10 +9,11 @@ import os
 from django.conf import settings
 from .utils.face_blurrer import make_blurred_picture
 from .utils.geolocation import get_geolocation, get_ip, get_distance
-from .models import Profile
+from .models import Profile, Match, Message
 from django.contrib.auth.models import User
 from django.db.models import Exists, OuterRef, Q
-
+from django.core import serializers
+import datetime
 
 # Create your views here.
 # @login_required
@@ -38,10 +39,28 @@ def edit_profile_view(request, *args, **kwargs):
 # @login_required
 def find_match_view(request, *args, **kwargs):
   user = request.user
-  profiles = get_profiles_age_gender(user)
+  profiles = get_profiles(user)
   print(profiles)
   context = {'profiles': profiles}
-  return render(request, "find_match_view.html", context)
+  return render(request, "test_view.html", context)
+
+def make_like(request,*args,**kwargs):
+  user = request.user
+  profile_id = kwargs.get('profile_id')
+  like_true = bool(kwargs.get('like'))
+  liked = Match.objects.filter(swiper_id=profile_id)
+  if liked:
+    Match.swipee = user.profile.id
+    Match.date_confirmed = datetime.datetime.now()
+    Match.match = like_true
+  else:
+    Match(swiper = user.profile.id)
+  return redirect('find_match_view')
+
+
+
+
+    
 
 # @login_required
 def settings_view(request, *args, **kwargs):
@@ -111,20 +130,17 @@ def set_profile_location(request, user):
 
 
 
-def get_profiles_age_gender(user):
+def get_profiles(user):
+  # returns list of profiles where the age and genders match the user's choices
   profile = user.profile
-  matches_age = Profile.objects.exclude(user = user).filter(age__lte=profile.match_age_max).filter(age__gte=profile.match_age_min)
   if profile.match_gender != 'ALL':
-    matches_age_gender =  matches_age.filter(gender=profile.match_gender)
+    matches = Profile.objects.exclude(user = user).filter(Q(age__lte=profile.match_age_max) & Q(age__gte=profile.match_age_min))
   else:
-    matches_age_gender = matches_age
-  return matches_age_gender
+    matches = Profile.objects.exclude(user = user).filter(Q(age__lte=profile.match_age_max) & Q(age__gte=profile.match_age_min) & Q(gender=profile.match_gender))
+  matches = [serializers.serialize('json', [ match_profile,]) for match_profile in matches if get_distance(match_profile.latitude,match_profile.longitude,profile.latitude, profile.longitude)]
+  
+  return matches
 
   
 
-def get_profiles_age_gender_distance(user):
-  user_profile = user.profile
-  age_gender_matches = get_profiles_age_gender(user)
-  matches_age_gender_distance = [match_profile for match_profile in age_gender_matches if get_distance(match_profile.latitude,match_profile.longitude,user_profile.latitude, user_profile.longitude)]
-  return matches_age_gender_distance
 

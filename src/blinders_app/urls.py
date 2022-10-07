@@ -32,5 +32,5 @@ urlpatterns = [
     path("register/", register_view),
     path("login/", login_view),
     path("app/matches", matches_view),
-    path("swipe/<int:id>", swipe_profile)
+    path("swipe/<int:id>/<int:like>", swipe_profile),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
