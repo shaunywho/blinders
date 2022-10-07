@@ -14,6 +14,7 @@ geocoder = "*"
 geoip2 = "*"
 django-seed = "*"
 mpu = "*"
+pytest-django = "*"
 
 [dev-packages]
 

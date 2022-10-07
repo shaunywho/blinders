@@ -24,11 +24,10 @@ def edit_profile_view(request, *args, **kwargs):
   if request.method == 'POST':
     update_profile_form = UpdateProfileForm(request.POST, request.FILES, instance = profile)
     if update_profile_form.is_valid():
-      profile = update_profile_form.save(commit = False)
-      print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-      print(profile.profile_picture_url.path)
-      print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-      blurred_picture_url = make_blurred_picture(profile.profile_picture_url.url)
+      profile = update_profile_form.save()
+      profile_picture_url = profile.profile_picture_url.url
+      blurred_picture_url = make_blurred_picture(profile_picture_url)
+      profile.profile_picture_url = profile_picture_url
       profile.blurred_profile_picture_url = blurred_picture_url
       profile.save()
   else:
@@ -62,7 +61,7 @@ def register_view(request, *args, **kwargs):
     if create_user_form.is_valid() and create_profile_form.is_valid():
       user = create_user_form.save()
       profile = user.profile
-      profile.first_name = user.first_name
+      profile.display_name = user.first_name
       profile.age = create_profile_form.cleaned_data['age']
       profile.gender = create_profile_form.cleaned_data['gender']
       profile.save()

@@ -37,8 +37,8 @@ class Profile(models.Model):
   longitude = models.DecimalField(max_digits=10, decimal_places=6, null = True)
   age = models.IntegerField(null=True, blank=False,validators=[MinValueValidator(MIN_AGE), MaxValueValidator(MAX_AGE)])
   bio = models.TextField(max_length=5000, default = "Add a bio", null = True)
-  profile_picture_url = models.ImageField(default = os.path.join( "images","default_profile_picture.jpg"), blank = True, upload_to = "images/")
-  blurred_profile_picture_url = models.ImageField(default = os.path.join( "images","default_profile_picture.jpg"), blank = True, upload_to = "images/")
+  profile_picture_url = models.ImageField(default = os.path.join( "media", "images","default_profile_picture.jpg"), blank = True, upload_to = "images/")
+  blurred_profile_picture_url = models.ImageField(default = os.path.join( "media", "images","default_profile_picture.jpg"), blank = True, upload_to = "images/")
  
 
 
@@ -54,9 +54,11 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class Match(models.Model):
-  matcher_id = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name = "matcher_id")
-  matchee_id = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name = "matchee_id")
+  liker_id = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name = "matcher_id")
+  likee_id = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name = "matchee_id")
   match = models.BooleanField(default= False)
+  date_liked= models.DateField(auto_now_add=True)
+  date_confirmed =models.DateField(null= True)
 
 class Message(models.Model):
   match_id = models.ForeignKey(Match, on_delete=models.CASCADE)

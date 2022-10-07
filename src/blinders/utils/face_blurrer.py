@@ -15,7 +15,10 @@ def make_blurred_picture(picture_url):
     image[y:y+h,x:x+h] = blurred_face_img
   blurred_picture_url = make_blurred_picture_url(picture_url)
   blurred_picture_full_url =f"{settings.BASE_DIR}{blurred_picture_url}"
+  print("HELLO")
+  print()
   print(blurred_picture_full_url)
+  print("XXXXXXXXXXXX")
   cv2.imwrite(blurred_picture_full_url, image)
   return blurred_picture_url
 
