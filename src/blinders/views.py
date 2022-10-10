@@ -48,17 +48,18 @@ def find_match_view(request, *args, **kwargs):
   return render(request, "find_match_view.html", context)
 
 def make_like(request,**kwargs):
-  like_true = bool(kwargs.get('like'))
+  liked = bool(kwargs.get('like'))
   user = request.user
   match_profile_id = kwargs.get('id')
-  liked = Match.objects.filter(liker_id=match_profile_id)
-
-  if liked:
-    Match.date_confirmed = datetime.datetime.now()
-    Match.match = like_true
-  else:
-
-    match = Match(liker_id = user.profile.id, likee_id = match_profile_id)
+  try:
+    # if already swiped by match_profile
+    swiped = Match.objects.get(Q(swiper_id=match_profile_id) & Q(swipee_id=user.profile.id))
+    swiped.date_confirmed = datetime.datetime.now()
+    swiped.match = True if swiped.liked & liked else False
+    swiped.save()
+  except:
+    # if not create a new match object
+    match = Match(swiper_id = user.profile.id, swipee_id = match_profile_id, liked = liked)
     match.save()
   return redirect('swipe_page')
 
@@ -116,8 +117,13 @@ def logout_user(request,*args, **kwargs):
   logout(request)
   return redirect('/')
 
-def matches_view (request, *args, **kwargs):
-  return render(request, 'matches_view.html')
+def chat_view (request, **kwargs):
+  profile = request.user.profile
+  matches_id_list = list(Match.objects.filter(match =True).filter(Q(swiper_id = profile.id) | Q(swipee_id = profile.id)).order_by('date_confirmed').values_list('swipee_id', 'swiper_id'))
+  profiles_id_list = [id for match in matches_id_list for id in match if id!=profile.id]
+  profiles = [model_to_dict(match_profile,['display_name','blurred_profile_picture_url', 'id']) for match_profile in Profile.objects.filter(id__in = profiles_id_list)]
+  context = {'profiles': profiles}
+  return render(request, 'chat_view.html', context)
 
 
 def swipe_profile(request, *args, **kwargs):
@@ -137,13 +143,13 @@ def set_profile_location(request, user):
 
 def get_profiles(profile):
   # returns list of profiles where the age and genders match the user's choices
+  exclude_id_list = [profile.id]
+  exclude_id_list.extend(list(Match.objects.filter(swiper_id =profile.id).values_list('swipee_id', flat=True)))
+  exclude_id_list.extend(list(Match.objects.filter(Q(swipee_id=profile.id) & ~Q(date_confirmed__isnull=True) ).values_list('swiper_id', flat=True)))
   if profile.match_gender == 'ALL':
-    matches = Profile.objects.exclude(id = profile.id, liker_id=profile.id).filter(Q(age__lte=profile.match_age_max) & Q(age__gte=profile.match_age_min))
-    
+    matches = Profile.objects.exclude(id__in = exclude_id_list).filter(Q(age__lte=profile.match_age_max) & Q(age__gte=profile.match_age_min))
   else:
-    matches = Profile.objects.exclude(id = profile.id, liker_id=profile.id ).filter(Q(age__lte=profile.match_age_max) & Q(age__gte=profile.match_age_min) & Q(gender=profile.match_gender))
-  # print(Profile.objects.exclude(id = profile.id).filter(Q(age__lte=profile.match_age_max) & Q(age__gte=profile.match_age_min)))
-  print(matches)
+    matches = Profile.objects.exclude(id__in = exclude_id_list).filter(Q(age__lte=profile.match_age_max) & Q(age__gte=profile.match_age_min) & Q(gender=profile.match_gender))
   matches = [match_profile for match_profile in matches if get_distance(match_profile.latitude,match_profile.longitude,profile.latitude, profile.longitude)<profile.match_distance]
 
   return matches

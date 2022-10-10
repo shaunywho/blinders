@@ -6,29 +6,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 import os
 from  django.conf import settings
 
-################################################################
-
-from django.db import models
-
-class Reporter(models.Model):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    email = models.EmailField()
-
-    def __str__(self):
-        return "%s %s" % (self.first_name, self.last_name)
-
-class Article(models.Model):
-    headline = models.CharField(max_length=100)
-    pub_date = models.DateField()
-    reporter = models.ForeignKey(Reporter, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.headline
-
-    class Meta:
-        ordering = ['headline']
-################################################################
 MIN_AGE = 18
 MAX_AGE =99
 
@@ -50,6 +27,7 @@ class Profile(models.Model):
   age = models.IntegerField(null=True, blank=False)
   gender = models.CharField(max_length=10, choices = GenderChoices.choices, null = True, blank = False)
   user = models.OneToOneField(User, on_delete=models.CASCADE)
+  liked_profiles = models.ManyToManyField('self', through= 'Match')
   match_distance = models.IntegerField(default = 30)
   match_age_max = models.IntegerField(default = 99)
   match_age_min = models.IntegerField(default = 18)
@@ -77,11 +55,14 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class Match(models.Model):
-  liker = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name = "liker")
-  likee = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name = "likee", null = True)
+  swiper = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name = "swiper")
+  swipee = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name = "swipee", null = True)
+  liked = models.BooleanField(null=True)
   match = models.BooleanField(default= False)
-  date_liked= models.DateField(auto_now=True)
-  date_confirmed =models.DateField(null= True)
+  date_liked= models.DateTimeField(auto_now=True)
+  date_confirmed =models.DateTimeField(null= True, blank = True)
+  class Meta:
+    unique_together = [['swiper', 'swipee']]
 
 class Message(models.Model):
   match_id = models.ForeignKey(Match, on_delete=models.CASCADE)
