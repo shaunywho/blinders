@@ -1,0 +1,45 @@
+{% load static %}
+<html>
+
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href = "{% static 'blinders/style.css' %}" />
+</head>
+
+<body>
+<div class="wrapper">
+
+  <div class = "sidebar">
+    <div class = "icon">
+      <h2> Blinders</h2>
+    </div>
+
+    <div class = "matches">
+      <ul>
+        {% for profile in profiles %}
+        <li><a href= "#"> {{profile.display_name}}</a></li>
+        {% endfor %}
+      
+      </ul>
+    </div>
+  </div>
+  <div class = "main_content">
+    <div class = "header_bar"></div>
+    <div class = "chat_box"> 
+      <div class = "header"> Welcome have a nice day</div>
+      <div class = "info">
+        <div> lorem</div>
+      </div>
+
+    </div>
+
+
+
+  </div>
+
+
+</div>  
+</body>
+
+</html>

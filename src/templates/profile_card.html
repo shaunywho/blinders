@@ -1,0 +1,24 @@
+<div class="card" style="width: 18rem">
+  <img class="card-img-top" src={{profile.blurred_profile_picture_url}} alt="Card image cap" />
+  <div class="card-body">
+    <h5 class="card-title">{{profile.display_name}}</h5>
+    <p class="card-text">
+      <ul style="list-style-type:none">
+      <li>{{profile.bio}}</li>
+
+      <li>{{profile.distance}} km away</li>
+      </ul>
+    </p>
+    <table>
+      <tbody>
+        <tr>
+
+          <td><a href={{profile.reject_url}} class="btn btn-primary">Reject</a></td>
+  
+          <td><a href={{ profile.like_url }} class="btn btn-primary">Like</a></td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> 

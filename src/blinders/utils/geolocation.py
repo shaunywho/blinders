@@ -1,6 +1,8 @@
 
 from django.contrib.gis.geoip2 import GeoIP2
 from django.conf import settings
+import mpu
+import math
 
 
 
@@ -8,9 +10,9 @@ def get_geolocation(request):
   ip = get_ip(request)
 
   g = GeoIP2()
-  print(g.city(ip))
 
-  return g.coords(ip)
+  return g.city(ip)
+
 
 
 def get_ip(request):
@@ -22,3 +24,12 @@ def get_ip(request):
   if ip== "127.0.0.1":
     ip = '77.98.66.170'
   return ip
+
+
+def get_distance(lat1,lon1, lat2,lon2):
+  dist = round(mpu.haversine_distance((lat1, lon1), (lat2, lon2)))
+  return dist
+
+def get_degrees(distance):
+  degrees = math.ceil(360*distance/40075.017)
+  return degrees 

@@ -15,7 +15,10 @@ def make_blurred_picture(picture_url):
     image[y:y+h,x:x+h] = blurred_face_img
   blurred_picture_url = make_blurred_picture_url(picture_url)
   blurred_picture_full_url =f"{settings.BASE_DIR}{blurred_picture_url}"
+  print("HELLO")
+  print()
   print(blurred_picture_full_url)
+  print("XXXXXXXXXXXX")
   cv2.imwrite(blurred_picture_full_url, image)
   return blurred_picture_url
 
@@ -26,4 +29,21 @@ def make_blurred_picture_url(picture_url):
   return os.path.join(directory, f"{filename}_blurred{extension}")
 
 
-  
+def make_blurred_picture_new(picture_url):
+  unblurred_picture_full_url = f"{settings.BASE_DIR}{picture_url}"
+  image = cv2.imread(unblurred_picture_full_url) 
+  blurred_picture_url = make_blurred_picture_url(picture_url)
+  blurred_picture_full_url =f"{settings.BASE_DIR}{blurred_picture_url}"
+  try:
+    face_cascade = cv2.CascadeClassifier(os.path.join(settings.ASSETS_URL,"opencv","haarcascade_frontalface_default.xml"))
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    for face in faces:
+      x ,y ,w, h = face
+      face_img = image[y:y+h,x:x+h]
+      blurred_face_img =cv2.blur(face_img, (100,100))
+      image[y:y+h,x:x+h] = blurred_face_img
+  except:
+    print('Blurring Failed')
+  cv2.imwrite(blurred_picture_full_url, image)
+  return blurred_picture_url

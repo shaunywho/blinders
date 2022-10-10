@@ -11,6 +11,9 @@ psycopg2 = "*"
 update = "*"
 opencv-contrib-python = "*"
 geoip2 = "*"
+django-seed = "*"
+mpu = "*"
+pytest-django = "*"
 
 [dev-packages]
 
