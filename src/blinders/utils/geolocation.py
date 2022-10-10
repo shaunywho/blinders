@@ -2,6 +2,8 @@
 from django.contrib.gis.geoip2 import GeoIP2
 from django.conf import settings
 import mpu
+import math
+
 
 
 def get_geolocation(request):
@@ -25,5 +27,9 @@ def get_ip(request):
 
 
 def get_distance(lat1,lon1, lat2,lon2):
-  dist = mpu.haversine_distance((lat1, lon1), (lat2, lon2))
+  dist = round(mpu.haversine_distance((lat1, lon1), (lat2, lon2)))
   return dist
+
+def get_degrees(distance):
+  degrees = math.ceil(360*distance/40075.017)
+  return degrees 

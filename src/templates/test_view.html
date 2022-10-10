@@ -1,3 +1,6 @@
 <html>
   Test Page
+  {% with profile as {{profiles.0}} %}
+  {{profile.display_name}}
+  {% endwith %}
 </html>

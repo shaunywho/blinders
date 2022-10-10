@@ -1,3 +1,7 @@
 {% extends 'base.html' %} {%block content %} {% include 'navbar.html' %}
+{% if profiles %}
 {% include 'profile_card.html' with profile=profiles.0 %}
+{% else %}
+No profiles found
+{% endif %}
 {% endblock %}

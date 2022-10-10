@@ -19,12 +19,12 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
-from blinders.views import edit_profile_view, find_match_view, settings_view, faq_view, landing_view, register_view, login_view, logout_user, matches_view, swipe_profile
+from blinders.views import edit_profile_view, find_match_view, settings_view, faq_view, landing_view, register_view, login_view, logout_user, matches_view, make_like
 
 urlpatterns = [
     path('', landing_view, name = 'home'),
     path('app/edit-profile/', edit_profile_view),
-    path('app/', find_match_view),
+    path('app/', find_match_view, name = 'swipe_page'),
     path('app/settings/', settings_view),
     path('app/faq', faq_view),
     path('admin/', admin.site.urls),
@@ -32,5 +32,5 @@ urlpatterns = [
     path("register/", register_view),
     path("login/", login_view),
     path("app/matches", matches_view),
-    path("swipe/<int:id>/<int:like>", swipe_profile),
+    path("swipe/<int:id>/<int:like>", make_like, name = "swipe_profile"),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

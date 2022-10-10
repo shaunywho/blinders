@@ -3,17 +3,20 @@
   <div class="card-body">
     <h5 class="card-title">{{profile.display_name}}</h5>
     <p class="card-text">
-      {{profile.bio}}
+      <ul style="list-style-type:none">
+      <li>{{profile.bio}}</li>
+
+      <li>{{profile.distance}} km away</li>
+      </ul>
     </p>
     <table>
       <tbody>
         <tr>
-          {% with "swipe/"|add:profile_id|add:"/0" as reject_url%}
-          <td><a href={{reject_url}} class="btn btn-primary">Reject</a></td>
-          {% endwith %}
-          {% with "swipe/"|add:profile.id|add:"/1" as like_url%}
-          <td><a href={{ like_url }} class="btn btn-primary">Like</a></td>
-          {% endwith %}
+
+          <td><a href={{profile.reject_url}} class="btn btn-primary">Reject</a></td>
+  
+          <td><a href={{ profile.like_url }} class="btn btn-primary">Like</a></td>
+
         </tr>
       </tbody>
     </table>

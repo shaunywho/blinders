@@ -6,6 +6,29 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 import os
 from  django.conf import settings
 
+################################################################
+
+from django.db import models
+
+class Reporter(models.Model):
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    email = models.EmailField()
+
+    def __str__(self):
+        return "%s %s" % (self.first_name, self.last_name)
+
+class Article(models.Model):
+    headline = models.CharField(max_length=100)
+    pub_date = models.DateField()
+    reporter = models.ForeignKey(Reporter, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.headline
+
+    class Meta:
+        ordering = ['headline']
+################################################################
 MIN_AGE = 18
 MAX_AGE =99
 
@@ -54,8 +77,8 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class Match(models.Model):
-  liker_id = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name = "matcher_id")
-  likee_id = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name = "matchee_id")
+  liker = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name = "liker")
+  likee = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name = "likee", null = True)
   match = models.BooleanField(default= False)
   date_liked= models.DateField(auto_now=True)
   date_confirmed =models.DateField(null= True)
